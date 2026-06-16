@@ -1,27 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Nikhil Cloud Lab | Day 74</title>
+    <title>Nikhil Cloud Engine | Day 78</title>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background-color: #1e293b; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); text-align: center; border: 1px solid #334155; }
-        h1 { color: #38bdf8; margin-bottom: 0.5rem; font-size: 2.5rem; }
-        h3 { color: #94a3b8; font-weight: 400; margin-top: 0; }
-        .badge { background-color: #22c55e; color: #ffffff; padding: 0.5rem 1rem; border-radius: 50px; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-top: 1rem; }
-        .info { margin-top: 1.5rem; font-size: 0.95rem; color: #cbd5e1; text-align: left; background: #0f172a; padding: 1rem; border-radius: 8px; font-family: monospace; }
+        body { 
+            background: #0b0f19; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', sans-serif; 
+            display: flex; 
+            flex-direction: column; /* Content vertical line me align hoga */
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+
+        .dynamic-card { 
+            background: #111827; 
+            padding: 3rem; 
+            border-radius: 16px;               
+            box-shadow: 0 0 35px var(--glow-color, #ef4444); /* VARIABLE SE SHADOW BADLEGI */
+            border: 1px solid var(--glow-color, #ef4444);    /* VARIABLE SE BORDER BADLEGA */
+            text-align: center;
+            max-width: 450px;
+            transition: all 0.4s ease; /* Smooth fade animation */
+        }
+
+        h1 { 
+            color: var(--glow-color, #ef4444); /* VARIABLE SE NAAM KA RANG BADLEGA */
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .branch-text {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-family: monospace;
+            border-left: 3px solid var(--glow-color, #ef4444);
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Nikhil Tanwar | Cloud Lab</h1>
-        <h3>B.Tech CSIT - Git-to-Cloud Automated CD Pipeline</h3>
-        <span class="badge">Day 75: Git Automation Pipeline Live!</span>
-        <div class="info">
-            - Status: Serving via Docker Volume<br>
-            - Day Count: Day 74 Sprint Successfully Mounted<br>
-            - Host Path: /home/ubuntu/my-website
-        </div>
+
+    <div class="dynamic-card" style="--glow-color: #f59e0b;">
+        <h1>Nikhil Cloud Engine</h1>
+        <div class="branch-text">B.Tech CSIT - Day 78</div>
+        <div class="status-badge">Status: Cyberpunk Yellow Variable Loaded</div>
     </div>
+
 </body>
 </html>
