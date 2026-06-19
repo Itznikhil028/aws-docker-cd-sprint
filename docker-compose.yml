@@ -1,0 +1,12 @@
+services:
+  web:
+    image: nginx
+    container_name: my-compose-env-server
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+    volumes:
+      - ./templates:/tmp/templates
+    command: >
+      bash -c "envsubst < /tmp/templates/index.html.template > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
