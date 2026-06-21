@@ -6,7 +6,13 @@ services:
       - "80:80"
     env_file:
       - .env
+    networks:
+      - frontend-net
     volumes:
       - ./templates:/tmp/templates
     command: >
       bash -c "envsubst < /tmp/templates/index.html.template > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+
+networks:
+  frontend-net:
+    driver: bridge
