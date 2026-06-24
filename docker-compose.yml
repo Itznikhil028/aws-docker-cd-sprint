@@ -14,12 +14,29 @@ services:
       bash -c "envsubst < /tmp/templates/index.html.template > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
 
   backend-api:
-    image: alpine
+    image: node:20-alpine
     container_name: my-compose-backend
+    working_dir: /app
+    volumes:
+      - ./server:/app
     networks:
       - app-net
-    command: sleep 3600
+    command: node index.js
+
+  database:
+    image: mongo:latest
+    container_name: my-compose-database
+    networks:
+      - app-net
+    volumes:
+      - db-data:/data/db
+    ports:
+      - "27017:27017"
 
 networks:
   app-net:
     driver: bridge
+
+volumes:
+  db-data:
+    driver: local
