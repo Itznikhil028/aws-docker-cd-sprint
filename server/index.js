@@ -1,29 +1,39 @@
-const net = require('net');
+const express = require('express');
+const { MongoClient } = require('mongodb');
 
-const HOST = 'database';
-const PORT = 27017;
-let retryCount = 1;
+const app = express();
+const PORT = 5000;
+const MONGO_URL = 'mongodb://database:27017';
 
-function connectWithRetry() {
-    console.log(`[Day 85 API] (Attempt ${retryCount}) Connection check to MongoDB at ${HOST}:${PORT}...`);
-    
-    const client = new net.Socket();
-    
-    client.connect(PORT, HOST, () => {
-        console.log(`[SUCCESS] Connected to MongoDB internal cluster mesh successfully!`);
-        client.destroy();
-    });
+app.use(express.json());
 
-    client.on('error', (err) => {
-        console.error(`[RETRY] Database not fully booted yet. Retrying in 2 seconds...`);
-        client.destroy();
-        retryCount++;
-        setTimeout(connectWithRetry, 2000); // 2 second ka gap dekar dubara call karega
-    });
-}
+app.get('/api/status', async (req, res) => {
+    let client;
+    try {
+        // Timeout increased to 10000ms for stable resolution
+        client = await MongoClient.connect(MONGO_URL, { serverSelectionTimeoutMS: 10000 });
+        const adminDb = client.db('admin');
+        const pingResult = await adminDb.command({ ping: 1 });
+        
+        res.status(200).json({
+            status: "healthy",
+            framework: "Express.js",
+            database: "MongoDB Connected Securely",
+            ping: pingResult
+        });
+    } catch (error) {
+        console.error("[ROUTE ERROR]", error.message);
+        res.status(500).json({ 
+            status: "error", 
+            message: "Database resolution failed: " + error.message 
+        });
+    } finally {
+        if (client) {
+            await client.close();
+        }
+    }
+});
 
-// Pehli baar function run karo
-connectWithRetry();
-
-// Runtime hold loop
-setInterval(() => {}, 1000);
+app.listen(PORT, () => {
+    console.log(`[🚀 API LIVE] Express gateway running on port ${PORT}`);
+});

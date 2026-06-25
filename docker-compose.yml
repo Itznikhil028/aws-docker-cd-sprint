@@ -17,10 +17,15 @@ services:
     image: node:20-alpine
     container_name: my-compose-backend
     working_dir: /app
+    ports:
+      - "5000:5000"
     volumes:
       - ./server:/app
     networks:
       - app-net
+    depends_on:
+      database:
+        condition: service_healthy
     command: node index.js
 
   database:
@@ -32,6 +37,12 @@ services:
       - db-data:/data/db
     ports:
       - "27017:27017"
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
 networks:
   app-net:
