@@ -3,7 +3,7 @@ services:
     image: nginx:alpine
     container_name: my-compose-frontend
     ports:
-      - "80:80"
+      - "80:80"        # 🔥 Sirf Nginx public internet ke liye open rahega!
     env_file:
       - .env
     networks:
@@ -11,7 +11,6 @@ services:
     volumes:
       - ./templates:/tmp/templates
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    # depends_on tells Docker to wait for backend-api to start first
     depends_on:
       - backend-api
     command: >
@@ -21,8 +20,7 @@ services:
     image: node:20-alpine
     container_name: my-compose-backend
     working_dir: /app
-    ports:
-      - "5000:5000"
+    # 🔒 PORTS MAPPING REMOVED — Ab ye sirf internal network par baat karega
     volumes:
       - ./server:/app
     networks:
@@ -39,8 +37,7 @@ services:
       - app-net
     volumes:
       - db-data:/data/db
-    ports:
-      - "27017:27017"
+    # 🔒 PORTS MAPPING REMOVED — Database completely secure from outside world
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 5s
