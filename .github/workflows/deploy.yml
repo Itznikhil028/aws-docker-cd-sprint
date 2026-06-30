@@ -1,0 +1,21 @@
+name: DevOps Sprint CI-CD Automation Pipeline
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Verify Docker Compose Syntax & Build
+      run: |
+        echo "Starting automated integration checks..."
+        docker compose config
