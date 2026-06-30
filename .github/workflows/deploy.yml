@@ -15,6 +15,15 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
+    # 🔑 Step: Testing ke liye ek dummy .env file create karna
+    - name: Create Dummy Env File for Validation
+      run: |
+        echo "Creating dummy .env file..."
+        touch .env
+        echo "DB_HOST=localhost" >> .env
+        echo "DB_USER=root" >> .env
+        echo "DB_PASSWORD=dummy" >> .env
+
     - name: Verify Docker Compose Syntax & Build
       run: |
         echo "Starting automated integration checks..."
