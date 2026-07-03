@@ -17,6 +17,13 @@ services:
       - backend-api
     # 🔥 Absolute shell syntax without quote mismatch issues
     command: /bin/sh -c "envsubst < /tmp/templates/index.html.template > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+    logging:
+      driver: "json-file"
+
+      options:
+        max-size: "10m"
+        max-file: "3"
+
 
   backend-api:
     build: ./server
@@ -26,6 +33,11 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   database:
     image: mongo:4.4
@@ -40,6 +52,11 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   app-net:
