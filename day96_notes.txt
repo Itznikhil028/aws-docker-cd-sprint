@@ -1,0 +1,2 @@
+Day 96: Explored logrotate configuration for rsyslog.
+Verified weekly rotation, retention limit of 4 files, and log compression rules.
