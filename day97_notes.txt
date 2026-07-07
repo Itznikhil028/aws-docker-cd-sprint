@@ -1,0 +1,3 @@
+Day 97: Successfully created a custom logrotate policy for an application.
+Resolved parent directory insecure permissions error using the 'su root adm' directive.
+Verified debug configuration using dry-run mode (logrotate -d).
