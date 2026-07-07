@@ -1,0 +1,2 @@
+Day 98: Analyzed auth.log using grep and awk pipelines.
+Extracted user session initializations and identified text delimiter shifting based on log sources.
