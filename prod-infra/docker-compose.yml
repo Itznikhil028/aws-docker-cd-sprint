@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: nginx:alpine
+    container_name: prod-frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend-html:/usr/share/nginx/html
+    networks:
+      - frontend-net
+    depends_on:
+      - backend
+
+  backend:
+    image: python:3.10-slim
+    container_name: prod-backend
+    command: python -m http.server 5000
+    networks:
+      - frontend-net
+      - backend-net
+    depends_on:
+      - database
+
+  database:
+    image: postgres:15-alpine
+    container_name: prod-db
+    environment:
+      POSTGRES_USER: nikhil_admin
+      POSTGRES_PASSWORD: super_secret_password_100
+      POSTGRES_DB: prod_data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend-net
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
