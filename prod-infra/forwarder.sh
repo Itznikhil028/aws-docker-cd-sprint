@@ -4,19 +4,28 @@
 SOURCE_LOG="/var/log/nginx/prod_telemetry.log"
 ARCHIVE_DIR="/home/ubuntu/my-website/prod-infra/archive"
 BACKUP_LOG="$ARCHIVE_DIR/central_alerts.log"
+ENC_LOG="$ARCHIVE_DIR/central_alerts.enc"
 
-# Initialize Secure Archival Target Directory
+# Secure Cryptographic Passphrase
+ENC_KEY="DevOpsSprint103Key"
+
+# Initialize Target Directories
 if [ ! -d "$ARCHIVE_DIR" ]; then
     mkdir -p "$ARCHIVE_DIR"
 fi
 
-# Extract and Ship Only Critical Breach Signals
+# Extract, Deduplicate, and Cryptographically Seal Alert Signals
 if [ -f "$SOURCE_LOG" ]; then
-    # Filter lines containing ALERT and append them to the central log file cleanly
+    # 1. Gather all current alerts into a temporary clean buffer
     sudo grep "ALERT" "$SOURCE_LOG" >> "$BACKUP_LOG" 2>/dev/null
     
-    # Optional: Deduplicate entries so the central file stays completely clean
     if [ -f "$BACKUP_LOG" ]; then
         sort -u "$BACKUP_LOG" -o "$BACKUP_LOG"
+        
+        # 2. Cryptographically seal the entire alert log using AES-256-CBC
+        openssl enc -aes-256-cbc -salt -pbkdf2 -in "$BACKUP_LOG" -out "$ENC_LOG" -pass pass:$ENC_KEY
+        
+        # 3. Wipe the plain-text buffer completely to maintain zero-trace state
+        rm -f "$BACKUP_LOG"
     fi
 fi
