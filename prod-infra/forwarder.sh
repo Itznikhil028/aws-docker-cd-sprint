@@ -5,6 +5,7 @@ SOURCE_LOG="/var/log/nginx/prod_telemetry.log"
 ARCHIVE_DIR="/home/ubuntu/my-website/prod-infra/archive"
 BACKUP_LOG="$ARCHIVE_DIR/central_alerts.log"
 ENC_LOG="$ARCHIVE_DIR/central_alerts.enc"
+HASH_FILE="$ARCHIVE_DIR/central_alerts.sha256"
 
 # Secure Cryptographic Passphrase Ingestion from Host Environment Variable
 if [ -z "$TELEMETRY_KEY" ]; then
@@ -26,6 +27,11 @@ if [ -f "$SOURCE_LOG" ]; then
         
         # Sealed using the dynamically loaded environment secret context
         openssl enc -aes-256-cbc -salt -pbkdf2 -in "$BACKUP_LOG" -out "$ENC_LOG" -pass pass:"$TELEMETRY_KEY"
+        
+        # NEW: Generate an immutable SHA-256 integrity signature of the encrypted payload
+        if [ -f "$ENC_LOG" ]; then
+            sha256sum "$ENC_LOG" > "$HASH_FILE"
+        fi
         
         rm -f "$BACKUP_LOG"
     fi
