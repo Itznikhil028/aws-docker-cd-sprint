@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Target Infrastructure Checkpoints
-BASE_DIR="/home/ubuntu/my-website/prod-infra"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REQUIRED_DIRS=("$BASE_DIR/archive" "$BASE_DIR/remote_backup_staging")
 REQUIRED_FILES=("monitor.sh" "forwarder.sh" "purge_maintenance.sh" "alert_aggregator.sh" "telemetry_shipper.sh" "generate_dashboard.py")
 
