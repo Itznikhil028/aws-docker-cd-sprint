@@ -1,46 +1,15 @@
 version: '3.8'
 
 services:
-  frontend:
-    image: nginx:alpine
-    container_name: prod-frontend
-    ports:
-      - "8080:80"
-    volumes:
-      - ./frontend-html:/usr/share/nginx/html
-    networks:
-      - frontend-net
-    depends_on:
-      - backend
-
-  backend:
-    image: python:3.10-slim
-    container_name: prod-backend
-    command: python -m http.server 5000
-    networks:
-      - frontend-net
-      - backend-net
-    depends_on:
-      - database
-
-  database:
-    image: postgres:15-alpine
-    container_name: prod-db
+  telemetry-sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telemetry-pipeline-core:v1.0
+    container_name: prod_telemetry_sentinel
     environment:
-      POSTGRES_USER: nikhil_admin
-      POSTGRES_PASSWORD: super_secret_password_100
-      POSTGRES_DB: prod_data
+      - TELEMETRY_KEY=${TELEMETRY_KEY:-default_secret_key}
     volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
-      - backend-net
-
-networks:
-  frontend-net:
-    driver: bridge
-  backend-net:
-    driver: bridge
-
-volumes:
-  db-data:
-    driver: local
+      - ./archive:/app/prod-infra/archive
+      - ./remote_backup_staging:/app/prod-infra/remote_backup_staging
+    restart: on-failure
