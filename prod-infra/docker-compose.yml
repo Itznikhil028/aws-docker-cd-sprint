@@ -1,14 +1,15 @@
-
 services:
   telemetry-sentinel:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: telemetry-pipeline-core:v1.0
     container_name: prod_telemetry_sentinel
+    image: telemetry-pipeline-core:${SENTINEL_VERSION}
+    build:
+      context: ..
+      dockerfile: prod-infra/Dockerfile
     environment:
-      - TELEMETRY_KEY=${TELEMETRY_KEY:-default_secret_key}
+      - TELEMETRY_KEY=prod_secret_88912
+      - ENV_MODE=${ENVIRONMENT}
+      - LOG_RETENTION=${LOG_RETENTION_DAYS}
     volumes:
-      - ./archive:/app/prod-infra/archive
-      - ./remote_backup_staging:/app/prod-infra/remote_backup_staging
+      - ${ARCHIVE_PATH}:/app/archive
+      - ${BACKUP_PATH}:/app/remote_backup_staging
     restart: on-failure
