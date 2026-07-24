@@ -12,4 +12,19 @@ services:
     volumes:
       - ${ARCHIVE_PATH}:/app/archive
       - ${BACKUP_PATH}:/app/remote_backup_staging
+    networks:
+      - internal_telemetry_net
     restart: on-failure
+
+  app-gateway:
+    container_name: prod_app_gateway
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    networks:
+      - internal_telemetry_net
+    restart: always
+
+networks:
+  internal_telemetry_net:
+    driver: bridge
