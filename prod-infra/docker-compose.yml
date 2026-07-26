@@ -1,4 +1,19 @@
 services:
+  app-gateway:
+    container_name: prod_app_gateway
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    networks:
+      - internal_telemetry_net
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:80/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 2s
+    restart: always
+
   telemetry-sentinel:
     container_name: prod_telemetry_sentinel
     image: telemetry-pipeline-core:${SENTINEL_VERSION}
@@ -14,16 +29,10 @@ services:
       - ${BACKUP_PATH}:/app/remote_backup_staging
     networks:
       - internal_telemetry_net
+    depends_on:
+      app-gateway:
+        condition: service_healthy
     restart: on-failure
-
-  app-gateway:
-    container_name: prod_app_gateway
-    image: nginx:alpine
-    ports:
-      - "8080:80"
-    networks:
-      - internal_telemetry_net
-    restart: always
 
 networks:
   internal_telemetry_net:
