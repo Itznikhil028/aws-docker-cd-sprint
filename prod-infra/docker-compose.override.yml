@@ -1,0 +1,12 @@
+services:
+  app-gateway:
+    ports:
+      - "8080:80"
+      - "8443:443"  # Extra dev SSL port
+    environment:
+      - NGINX_DEBUG=true
+
+  telemetry-sentinel:
+    environment:
+      - LOG_LEVEL=DEBUG
+      - DEV_MODE=true
