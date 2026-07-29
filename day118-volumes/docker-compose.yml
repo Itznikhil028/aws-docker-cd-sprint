@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Primary Application Service writing to named volume
+  app-worker:
+    image: ubuntu:22.04
+    container_name: app-worker
+    volumes:
+      - app_prod_data:/var/log/app_data
+      - ./app_logger.sh:/usr/local/bin/app_logger.sh:ro
+    command: ["/bin/bash", "/usr/local/bin/app_logger.sh"]
+    restart: always
+
+  # Backup Sidecar Service
+  backup-job:
+    image: ubuntu:22.04
+    container_name: backup-job
+    depends_on:
+      - app-worker
+    volumes:
+      - app_prod_data:/source_data:ro
+      - ./backups:/backup_destination
+    command: >
+      sh -c "sleep 10 && tar -czvf /backup_destination/app_data_backup_$$(date +%Y%m%d_%H%M%S).tar.gz -C /source_data ."
+
+volumes:
+  app_prod_data:
+    name: prod_telemetry_named_vol
