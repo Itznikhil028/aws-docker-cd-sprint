@@ -1,0 +1,27 @@
+services:
+  # Stable Web Service (capped at 128MB RAM and 0.5 CPU)
+  stable-app:
+    image: nginx:alpine
+    container_name: stable-app
+    ports:
+      - "8085:80"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+    restart: on-failure:5
+
+  # Stress Test Container (attempts 256MB allocation on a 100MB limit)
+  memory-hog:
+    image: polinux/stress
+    container_name: memory-hog
+    command: ["stress", "--vm", "1", "--vm-bytes", "256M", "--timeout", "30s"]
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+    restart: "no"
