@@ -1,0 +1,18 @@
+services:
+  app-server:
+    image: alpine
+    container_name: app-server
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:80"
+    command: sh -c "echo 'App Running in ${APP_ENV} mode on port ${APP_PORT}' && tail -f /dev/null"
+    restart: always
+
+  db-server:
+    image: redis:alpine
+    container_name: db-server
+    environment:
+      - REDIS_USER=${DB_USER}
+      - REDIS_PASSWORD=${DB_PASS}
+    restart: always
