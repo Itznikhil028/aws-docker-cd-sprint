@@ -1,0 +1,13 @@
+services:
+  stress-test-app:
+    image: polinux/stress
+    container_name: stress-test-app
+    command: sh -c "while true; do stress --cpu 2 --vm 1 --vm-bytes 100M --timeout 10s; sleep 1; done"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
