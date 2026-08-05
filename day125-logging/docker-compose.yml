@@ -1,0 +1,11 @@
+services:
+  log-generator:
+    image: alpine
+    container_name: log-generator
+    command: ["sh", "-c", "while true; do echo 'INFO: Application is running healthy'; sleep 2; done"]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: always
