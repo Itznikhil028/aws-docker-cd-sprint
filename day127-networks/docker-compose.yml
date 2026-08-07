@@ -1,0 +1,28 @@
+services:
+  web-app:
+    image: alpine
+    container_name: web-app
+    command: sleep 3600
+    networks:
+      - frontend-net
+      - backend-net
+
+  isolated-db:
+    image: alpine
+    container_name: isolated-db
+    command: sleep 3600
+    networks:
+      - backend-net
+
+  external-client:
+    image: alpine
+    container_name: external-client
+    command: sleep 3600
+    networks:
+      - frontend-net
+
+networks:
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
