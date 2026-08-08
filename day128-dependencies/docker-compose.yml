@@ -1,0 +1,18 @@
+services:
+  redis-db:
+    image: redis:alpine
+    container_name: redis-db
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 2s
+      retries: 5
+      start_period: 2s
+
+  app-service:
+    image: alpine
+    container_name: app-service
+    command: sh -c "echo 'App Service connected successfully to Redis!' && sleep 3600"
+    depends_on:
+      redis-db:
+        condition: service_healthy
