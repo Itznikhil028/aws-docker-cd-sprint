@@ -1,0 +1,8 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: multi-env-web
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=base

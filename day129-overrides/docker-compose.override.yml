@@ -1,0 +1,7 @@
+services:
+  web:
+    environment:
+      - APP_ENV=development
+      - DEBUG_MODE=true
+    ports:
+      - "8081:80"
