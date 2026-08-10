@@ -1,0 +1,6 @@
+services:
+  api:
+    image: nginx:alpine
+    container_name: production-api
+    environment:
+      - APP_ENV=base
